@@ -7,8 +7,8 @@ function create() {
     let app = electron.app;
     app.on('ready', () => {
         let mainWindow = new BrowserWindow({
-            width: 400,
-            height: 400
+            width: 800,
+            height: 800
         });
         //mainWindow.maximize();
 
@@ -25,4 +25,4 @@ function create() {
 
 }
 
-exports.create = create;  
+exports.create = create;

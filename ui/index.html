@@ -1,9 +1,35 @@
 <html>
-    <head>
-    </head>
-    <script>require('angular')</script>
-    <body ng-app="dupsFinder">
-        {{2 + 3}}
-    </body>
-    
+
+<head>
+    <link rel="stylesheet" href="external/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="external/bootstrap/css/bootstrap-theme.min.css">
+</head>
+
+<body ng-app="dupsFinderUI" ng-controller="mainController">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h3>Duplicate File Finder</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-lg-push-8">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="search for duplicates" aria-describedby="basic-addon">
+                    <input type="file" class="form-control" webkitdirectory directory placeholder="path" aria-describedby="basic-addon">
+                    <span class="input-group-addon" id="basic-addon1" ng-click="serachForDuplicates">Search</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    require('angular');
+    require('angular-ui-grid');
+    require('./rendererMain');
+    require('./jquery');
+</script>
+
+
 </html>
