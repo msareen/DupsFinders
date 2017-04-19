@@ -17,9 +17,9 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="path...">
+                    <input type="text" ng-model="pathValue" class="form-control" placeholder="path...">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Browse</button>
+                        <button class="btn btn-default" type="button" ng-click="browsePath()">Browse</button>
                     </span>
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button">Go!</button>
@@ -29,23 +29,25 @@
         </div>
         <div class="row mar-medium-top">
             <div class="col-lg-12">
-                <div id="grid1" ui-grid="gridOptions" class="grid" ></div>
+                <div id="grid1" ui-grid="gridOptions" class="grid"></div>
             </div>
         </div>
     </div>
+
+    <open-file-dialog options="dialogOptions" on-selection="onPathSelected"></open-file-dialog>
 </body>
 
+<!--
 <script>
     require('angular');
     require('angular-ui-grid');
     require('./rendererMain');
     require('./jquery');
 </script>
-<!--
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script src="rendererMain.js"></script>
-    <script src="./external/angular-ui-grid/ui-grid.js"></script>
 -->
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<script src="rendererMain.js"></script>
+<script src="./external/angular-ui-grid/ui-grid.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
 </html>

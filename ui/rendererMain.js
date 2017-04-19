@@ -2,27 +2,40 @@ var app = angular.module('dupsFinderUI', ['ui.grid']);
 
 app.controller('mainController', function ($scope) {
 
-    $scope.browseLocation = function () {
-
+    $scope.dialogOptions = {
+        onRegisterApi: function (dialogApi) {
+            $scope.dialogApi = dialogApi;
+        }
     }
+
+    $scope.browsePath = function () {
+        $scope.dialogApi.showDialog();
+    }
+
+    $scope.onPathSelected = function ( value ) {
+        alert(value);
+        $scope.pathValue = value;
+    }
+
+
 
     $scope.gridOptions = {
         columnDefs: [
             {
-                name:"firstName",
-                field:"firstName",
+                name: "firstName",
+                field: "firstName",
             },
             {
-                name:"lastName",
-                field:"lastName",
+                name: "lastName",
+                field: "lastName",
             },
             {
-                name:"company",
-                field:"company",
+                name: "company",
+                field: "company",
             },
             {
-                name:"employed",
-                field:"employed",
+                name: "employed",
+                field: "employed",
             },
         ]
 
@@ -47,4 +60,28 @@ app.controller('mainController', function ($scope) {
             "company": "Fuelton",
             "employed": false
     }];
+});
+
+app.directive('openFileDialog', function () {
+    return {
+        restrict: 'AEC',
+        template: '<input type="file" id="open-file-dialog" style="display:none"/>',
+        scope: {
+            onSelection: '&',
+            options: '='
+        },
+        link: function (scope, element, attr) {
+            var dialogApi = {};
+            scope.options.onRegisterApi(dialogApi);
+            dialogApi.showDialog = function () {
+                $('#open-file-dialog').click();
+            }
+
+            $('#open-file-dialog').change(function( event ) {
+                scope.onSelection()(event.value);
+
+
+            });
+        }
+    }
 });
