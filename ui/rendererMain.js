@@ -1,8 +1,8 @@
 var app = angular.module('dupsFinderUI', ['ui.grid']);
 
 app.controller('mainController', function ($scope) {
-
     $scope.dialogOptions = {
+        isDirectoyDialog : true,
         onRegisterApi: function (dialogApi) {
             $scope.dialogApi = dialogApi;
         }
@@ -12,9 +12,9 @@ app.controller('mainController', function ($scope) {
         $scope.dialogApi.showDialog();
     }
 
-    $scope.onPathSelected = function ( value ) {
-        alert(value);
-        $scope.pathValue = value;
+    $scope.onPathSelected = function ( event ) {
+        alert( event.value );
+        $scope.pathValue = event.value;
     }
 
 
@@ -62,26 +62,3 @@ app.controller('mainController', function ($scope) {
     }];
 });
 
-app.directive('openFileDialog', function () {
-    return {
-        restrict: 'AEC',
-        template: '<input type="file" id="open-file-dialog" style="display:none"/>',
-        scope: {
-            onSelection: '&',
-            options: '='
-        },
-        link: function (scope, element, attr) {
-            var dialogApi = {};
-            scope.options.onRegisterApi(dialogApi);
-            dialogApi.showDialog = function () {
-                $('#open-file-dialog').click();
-            }
-
-            $('#open-file-dialog').change(function( event ) {
-                scope.onSelection()(event.value);
-
-
-            });
-        }
-    }
-});
