@@ -1,7 +1,9 @@
 var app = angular.module('dupsFinderUI', ['ui.grid']);
-const {electron,dialog} = require('electron').remote;
+const {electron,dialog, ipcRenderer} = require('electron').remote;
 
 app.controller('mainController', function ($scope) {
+
+    $scope.pathValue = '';
 
     $scope.dialogOptions = {
         isDirectoyDialog : true,
@@ -16,49 +18,36 @@ app.controller('mainController', function ($scope) {
     }
 
    $scope.lookForDuplicates = function() {
+       ipcRenderer.send('duplicate-finder', $scope.pathValue);
 
+       ipcRenderer.on('finder-progress', ( event, args ) => {
+           if( args.type === 'progress' ) {
+                markProgress( args.data );
+           }
+           else if ( args.type === 'result') {
+               renderResults( args.data );
+           }
+           else if( args.type === 'error' ) {
+
+           }
+           $scope.$apply();
+       });
    };
 
-    $scope.gridOptions = {
-        columnDefs: [
-            {
-                name: "firstName",
-                field: "firstName",
-            },
-            {
-                name: "lastName",
-                field: "lastName",
-            },
-            {
-                name: "company",
-                field: "company",
-            },
-            {
-                name: "employed",
-                field: "employed",
-            },
-        ]
+    function markProgress( message ) {
+
 
     }
 
-    $scope.gridOptions.data = [
-        {
-            "firstName": "Cox",
-            "lastName": "Carney",
-            "company": "Enormo",
-            "employed": true
-    },
-        {
-            "firstName": "Lorraine",
-            "lastName": "Wise",
-            "company": "Comveyer",
-            "employed": false
-    },
-        {
-            "firstName": "Nancy",
-            "lastName": "Waters",
-            "company": "Fuelton",
-            "employed": false
-    }];
+    function renderResults( results ) {
+
+
+    }
+
+    $scope.gridOptions = {
+        data : {}
+    }
+
+
 });
 

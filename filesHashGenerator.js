@@ -15,12 +15,20 @@ var hashObjects = {
     isHashGeneated : false
 };
 
-function filesHashGenerator( dirName ) {
+var progress = null;
+
+function onProgress( callback ) {
+    progress = callback;
+}
+
+function generateHash( dirName ) {
     var defered = q.defer();
     dirWalker( dirName , function (err, results) {
         if (err) {
             console.log(err);
+            deferred.reject( err );
         } else {
+            progress( 'found ' + results.length + ' files' );
             consolidateHash(results).then((hashMap) => {
                 fullHashMap = hashMap;
                 var dupes = _.filter(hashMap, (item) => {
@@ -38,7 +46,7 @@ function filesHashGenerator( dirName ) {
 
 
 
-function consolidateHash(files) {
+function consolidateHash( files ) {
     var defered = q.defer();
     var progressCounter = 0;
     var hashMap = {};
@@ -47,8 +55,10 @@ function consolidateHash(files) {
                 progressCounter++;
                 process.stdout.clearLine();
                 process.stdout.cursorTo(0);
-                var progress = ((progressCounter / files.length) * 100).toFixed(1);
-                process.stdout.write('Progress: ' + progress + '% - file : ' + progressCounter + '/' + files.length);
+                var progressPercentage = ((progressCounter / files.length) * 100).toFixed(1);
+                var message = 'Progress: ' + progressPercentage + '% - file : ' + progressCounter + '/' + files.length;
+                process.stdout.write( message );
+                progress ( message );
                 if (!hashMap[checksum]) {
                     hashMap[checksum] = {
                         count: 1,
@@ -72,7 +82,7 @@ function consolidateHash(files) {
 }
 
 
-
+//Asyn Directory walker
 function dirWalker(dir, callback) {
     var results = [];
     fs.stat(dir, (err, stats) => {
@@ -106,6 +116,7 @@ function dirWalker(dir, callback) {
     })
 }
 
+//Generate has for a file
 function getHash(file) {
     var defered = q.defer();
     var stream = fs.ReadStream(file);
@@ -118,8 +129,7 @@ function getHash(file) {
         var hash = shasum.digest('hex')
         defered.resolve(hash);
     })
-
     return defered.promise;
 }
 
-exports.filesHashGenerator = filesHashGenerator;
+exports.filesHashGenerator =  { generateHash, onProgress };

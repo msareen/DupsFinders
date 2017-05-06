@@ -1,7 +1,11 @@
-const electron = require('electron');
+const {
+    BrowserWindow, ipcMain
+} = require('electron');
 const path = require('path');
 const url = require('url');
-const BrowserWindow = electron.BrowserWindow;
+const {
+    generateHash, onProgress
+} = require('./filesHashGenerator.js');
 
 function create() {
     let app = electron.app;
@@ -22,7 +26,31 @@ function create() {
             mainWindow = null;
         });
     });
-
 }
+
+
+ipcMain.on('duplicate-finder', (event, arg) => {
+    generateHash(args)
+        .then((results) => {
+            event.sender.send('finder-progress', {
+                type: 'result',
+                data: results
+            });
+        })
+        .catch((err) => {
+            event.sender.send('finder-progress', {
+                type: 'error',
+                data: err
+            });
+        });
+
+    onProgress(function (message) {
+        event.sender.send('finder-progress', {
+            type: 'progress',
+            data: message
+        });
+    })
+
+})
 
 exports.create = create;
