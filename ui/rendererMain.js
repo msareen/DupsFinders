@@ -1,6 +1,8 @@
 var app = angular.module('dupsFinderUI', ['ui.grid']);
+const {electron,dialog} = require('electron').remote;
 
 app.controller('mainController', function ($scope) {
+
     $scope.dialogOptions = {
         isDirectoyDialog : true,
         onRegisterApi: function (dialogApi) {
@@ -9,15 +11,13 @@ app.controller('mainController', function ($scope) {
     }
 
     $scope.browsePath = function () {
-        $scope.dialogApi.showDialog();
+        $scope.pathValue = dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']});
+        $scope.$apply();
     }
 
-    $scope.onPathSelected = function ( event ) {
-        alert( event.value );
-        $scope.pathValue = event.value;
-    }
+   $scope.lookForDuplicates = function() {
 
-
+   };
 
     $scope.gridOptions = {
         columnDefs: [

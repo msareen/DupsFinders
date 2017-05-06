@@ -22,7 +22,7 @@
                         <button class="btn btn-default" type="button" ng-click="browsePath()">Browse</button>
                     </span>
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">Go!</button>
+                        <button class="btn btn-default" ng-click="lookForDuplicates()" type="button">Go!</button>
                     </span>
                 </div>
             </div>
@@ -34,21 +34,19 @@
         </div>
     </div>
 
-    <open-file-dialog options="dialogOptions" on-selection="onPathSelected( $event )"></open-file-dialog>
 </body>
 
-<!--
 <script>
     require('angular');
     require('angular-ui-grid');
+    require('jquery');
     require('./rendererMain');
-    require('./jquery');
 </script>
--->
+<!--
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 <script src="./external/angular-ui-grid/ui-grid.js"></script>
+-->
 <script src="./rendererMain.js"></script>
-<script src="./openFileDialog.directive.js"></script>
 
 </html>
