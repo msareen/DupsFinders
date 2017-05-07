@@ -1,14 +1,14 @@
 const {
-    BrowserWindow, ipcMain
+    BrowserWindow, ipcMain, app
 } = require('electron');
 const path = require('path');
 const url = require('url');
+
 const {
     generateHash, onProgress
-} = require('./filesHashGenerator.js');
+} = require('./../filesHashGenerator.js');
 
 function create() {
-    let app = electron.app;
     app.on('ready', () => {
         let mainWindow = new BrowserWindow({
             width: 800,
