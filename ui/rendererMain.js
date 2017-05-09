@@ -40,7 +40,7 @@ app.controller('mainController', function ($scope) {
     }
 
     function renderResults( results ) {
-
+        console.log(results);
 
     }
 

@@ -4,6 +4,8 @@ const {
 const path = require('path');
 const url = require('url');
 
+require('electron-debug')({showDevTools: true});
+
 const {
     generateHash, onProgress
 } = require('./../filesHashGenerator.js');

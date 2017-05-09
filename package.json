@@ -19,14 +19,14 @@
     "angular-route": "^1.6.4",
     "angular-ui-grid": "^4.0.4",
     "electron": "^1.6.2",
+    "electron-debug": "^1.1.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "ncp": "^2.0.0",
     "q": "^1.5.0"
   },
   "devDependencies": {
-    "electron-inspector": "^0.1.4",
-    "electron-prebuilt": "^1.4.13",
+    "devtron": "^1.4.0",
     "gulp": "^3.9.1"
   }
 }
