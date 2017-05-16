@@ -1,10 +1,12 @@
+'use strict';
+
 const {
     BrowserWindow, ipcMain, app
 } = require('electron');
 const path = require('path');
 const url = require('url');
 
-require('electron-debug')({showDevTools: true});
+//require('electron-debug')({showDevTools: true});
 
 const {
     generateHash, onProgress

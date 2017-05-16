@@ -1,3 +1,5 @@
+'use strict';
+
 var app = angular.module('dupsFinderUI', ['ui.grid']);
 const {electron,dialog, ipcRenderer} = require('electron').remote;
 
