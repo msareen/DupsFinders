@@ -5,9 +5,9 @@ const { remote, ipcRenderer } = require('electron');
 
 app.controller('mainController', function ($scope) {
     $scope.pathValue = '';
+    $scope.progressObj = {};
     $scope.browsePath = function () {
         $scope.pathValue = remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']});
-        $scope.$apply();
     }
 
    $scope.lookForDuplicates = function() {
@@ -22,17 +22,18 @@ app.controller('mainController', function ($scope) {
            else if( args.type === 'error' ) {
 
            }
-           $scope.$apply();
+           
        });
    };
 
-    function markProgress( message ) {
-
-
+    function markProgress( progressObj ) {
+        $scope.progressObj = progressObj;
+        $scope.$apply();
     }
 
     function renderResults( results ) {
-        console.log(results);
+        $scope.gridOptions.data = results.dupsHashMap;
+        $scope.$apply();
     }
 
     $scope.gridOptions = {

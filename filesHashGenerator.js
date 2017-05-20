@@ -23,12 +23,19 @@ function onProgress( callback ) {
 
 function generateHash( dirName ) {
     var defered = q.defer();
+     progress( {
+                progressPercentage : 0,
+                message : 'starting'
+            } );
     dirWalker( dirName , function (err, results) {
         if (err) {
             console.log(err);
             deferred.reject( err );
         } else {
-            progress( 'found ' + results.length + ' files' );
+            progress( {
+                progressPercentage : 0,
+                message :  '0% ' + '0/' + results.length
+            } );
             consolidateHash(results).then((hashMap) => {
                 fullHashMap = hashMap;
                 var dupes = _.filter(hashMap, (item) => {
@@ -37,6 +44,10 @@ function generateHash( dirName ) {
                 hashObjects.isHashGeneated = true;
                 hashObjects.fullHashMap = hashMap;
                 hashObjects.dupsHashMap = dupes;
+                progress( {
+                     progressPercentage : 100,
+                     message : 'Completed'
+                })
                 defered.resolve( hashObjects );
             });
         }
@@ -53,12 +64,13 @@ function consolidateHash( files ) {
     files.forEach((file) => {
         getHash(file).then((checksum) => {
                 progressCounter++;
-                process.stdout.clearLine();
-                process.stdout.cursorTo(0);
                 var progressPercentage = ((progressCounter / files.length) * 100).toFixed(1);
-                var message = 'Progress: ' + progressPercentage + '% - file : ' + progressCounter + '/' + files.length;
-                process.stdout.write( message );
-                progress ( message );
+                var message = progressPercentage + '% ' + progressCounter + '/' + files.length;
+                writeOnConsole( message );
+                progress ( {
+                    progressPercentage : progressPercentage,
+                    message : message
+                } );
                 if (!hashMap[checksum]) {
                     hashMap[checksum] = {
                         count: 1,
@@ -80,6 +92,15 @@ function consolidateHash( files ) {
     });
     return defered.promise;
 }
+
+function writeOnConsole( message ) {
+    if (!process.stdout.isTTY) {
+       return;
+    }
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write( message );
+}    
 
 
 //Asyn Directory walker
@@ -132,4 +153,4 @@ function getHash(file) {
     return defered.promise;
 }
 
-exports.filesHashGenerator =  { generateHash, onProgress };
+module.exports =  { generateHash, onProgress };

@@ -5,6 +5,7 @@ const {
 } = require('electron');
 const path = require('path');
 const url = require('url');
+const _ = require('lodash');
 
 //require('electron-debug')({showDevTools: true});
 
@@ -34,7 +35,16 @@ function create() {
 
 
 ipcMain.on('duplicate-finder', (event, args) => {
-    generateHash(args)
+    var dir = _.first(args);
+
+    onProgress(function (message) {
+        event.sender.send('finder-progress', {
+            type: 'progress',
+            data: message
+        });
+    })
+
+    generateHash(dir)
         .then((results) => {
             event.sender.send('finder-progress', {
                 type: 'result',
@@ -48,12 +58,7 @@ ipcMain.on('duplicate-finder', (event, args) => {
             });
         });
 
-    onProgress(function (message) {
-        event.sender.send('finder-progress', {
-            type: 'progress',
-            data: message
-        });
-    })
+    
 
 })
 
