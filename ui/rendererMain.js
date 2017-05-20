@@ -1,27 +1,17 @@
 'use strict';
 
 var app = angular.module('dupsFinderUI', ['ui.grid']);
-const {electron,dialog, ipcRenderer} = require('electron').remote;
+const { remote, ipcRenderer } = require('electron');
 
 app.controller('mainController', function ($scope) {
-
     $scope.pathValue = '';
-
-    $scope.dialogOptions = {
-        isDirectoyDialog : true,
-        onRegisterApi: function (dialogApi) {
-            $scope.dialogApi = dialogApi;
-        }
-    }
-
     $scope.browsePath = function () {
-        $scope.pathValue = dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']});
+        $scope.pathValue = remote.dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']});
         $scope.$apply();
     }
 
    $scope.lookForDuplicates = function() {
        ipcRenderer.send('duplicate-finder', $scope.pathValue);
-
        ipcRenderer.on('finder-progress', ( event, args ) => {
            if( args.type === 'progress' ) {
                 markProgress( args.data );
@@ -43,7 +33,6 @@ app.controller('mainController', function ($scope) {
 
     function renderResults( results ) {
         console.log(results);
-
     }
 
     $scope.gridOptions = {

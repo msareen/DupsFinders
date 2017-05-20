@@ -33,7 +33,7 @@ function create() {
 }
 
 
-ipcMain.on('duplicate-finder', (event, arg) => {
+ipcMain.on('duplicate-finder', (event, args) => {
     generateHash(args)
         .then((results) => {
             event.sender.send('finder-progress', {
