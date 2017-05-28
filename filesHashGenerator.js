@@ -12,44 +12,45 @@ const _ = require('lodash');
 
 
 var hashObjects = {
-    isHashGeneated : false
+    isHashGeneated: false
 };
 
 var progress = null;
 
-function onProgress( callback ) {
+function onProgress(callback) {
     progress = callback;
 }
 
-function generateHash( dirName ) {
+function generateHash(dirName) {
     var defered = q.defer();
-     progress( {
-                progressPercentage : 0,
-                message : 'starting'
-            } );
-    dirWalker( dirName , function (err, results) {
+    progress({
+        progressPercentage: 0,
+        message: 'starting'
+    });
+    dirWalker(dirName, function (err, results) {
         if (err) {
             console.log(err);
-            deferred.reject( err );
+            deferred.reject(err);
         } else {
-            progress( {
-                progressPercentage : 0,
-                message :  '0% ' + '0/' + results.length
-            } );
-            consolidateHash(results).then((hashMap) => {
-                fullHashMap = hashMap;
-                var dupes = _.filter(hashMap, (item) => {
-                    return item.count > 1
-                });
-                hashObjects.isHashGeneated = true;
-                hashObjects.fullHashMap = hashMap;
-                hashObjects.dupsHashMap = dupes;
-                progress( {
-                     progressPercentage : 100,
-                     message : 'Completed'
-                })
-                defered.resolve( hashObjects );
+            progress({
+                progressPercentage: 0,
+                message: '0% ' + '0/' + results.length
             });
+            consolidateHash(results)
+                .then((hashMap) => {
+                    fullHashMap = hashMap;
+                    var dupes = _.filter(hashMap, (item) => {
+                        return item.count > 1
+                    });
+                    hashObjects.isHashGeneated = true;
+                    hashObjects.fullHashMap = hashMap;
+                    hashObjects.dupsHashMap = dupes;
+                    progress({
+                        progressPercentage: 100,
+                        message: 'Completed'
+                    })
+                    defered.resolve(hashObjects);
+                });
         }
     });
     return defered.promise;
@@ -57,35 +58,36 @@ function generateHash( dirName ) {
 
 
 
-function consolidateHash( files ) {
+function consolidateHash(files) {
     var defered = q.defer();
     var progressCounter = 0;
     var hashMap = {};
     files.forEach((file) => {
         getHash(file).then((checksum) => {
-                progressCounter++;
-                var progressPercentage = ((progressCounter / files.length) * 100).toFixed(1);
-                var message = progressPercentage + '% ' + progressCounter + '/' + files.length;
-                writeOnConsole( message );
-                progress ( {
-                    progressPercentage : progressPercentage,
-                    message : message
-                } );
-                if (!hashMap[checksum]) {
-                    hashMap[checksum] = {
-                        count: 1,
-                        files: [file]
-                    };
-                } else {
-                    hashMap[checksum].count++;
-                    hashMap[checksum].files.push(file);
-                }
+            progressCounter++;
+            var progressPercentage = ((progressCounter / files.length) * 100).toFixed(1);
+            var message = progressPercentage + '% ' + progressCounter + '/' + files.length;
+            writeOnConsole(message);
+            progress({
+                progressPercentage: progressPercentage,
+                message: message
+            });
+            if (!hashMap[checksum]) {
+                hashMap[checksum] = {
+                    count: 1,
+                    files: [file]
+                };
+            } else {
+                hashMap[checksum].count++;
+                hashMap[checksum].files.push(file);
+                hashMap[checksum].files.push(path.basename(file));
+            }
 
-                if (progressCounter === files.length) {
-                    console.log('resolving hashmap');
-                    defered.resolve(hashMap);
-                }
-            })
+            if (progressCounter === files.length) {
+                console.log('resolving hashmap');
+                defered.resolve(hashMap);
+            }
+        })
             .catch((err) => {
                 console.log(err);
             });
@@ -93,17 +95,17 @@ function consolidateHash( files ) {
     return defered.promise;
 }
 
-function writeOnConsole( message ) {
+function writeOnConsole(message) {
     if (!process.stdout.isTTY) {
-       return;
+        return;
     }
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write( message );
-}    
+    process.stdout.write(message);
+}
 
 
-//Asyn Directory walker
+//Async Directory walker
 function dirWalker(dir, callback) {
     var results = [];
     fs.stat(dir, (err, stats) => {
@@ -137,7 +139,7 @@ function dirWalker(dir, callback) {
     })
 }
 
-//Generate has for a file
+//Generate hash for a file
 function getHash(file) {
     var defered = q.defer();
     var stream = fs.ReadStream(file);
@@ -153,4 +155,4 @@ function getHash(file) {
     return defered.promise;
 }
 
-module.exports =  { generateHash, onProgress };
+module.exports = { generateHash, onProgress };
