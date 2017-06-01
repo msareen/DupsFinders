@@ -3,10 +3,11 @@
         var service = this;
 
         var columns = [
-            { name: 'id' },
-            { name: 'name' },
-            { name: 'age' },
-            { name: 'address.city' }
+            { name: 'FileHash' },
+            { name: 'Name' },
+            { name: 'FullPath' },
+            { name: 'Count' },
+            { name: 'Action' }
         ];
     });
 })();
