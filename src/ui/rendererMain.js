@@ -12,7 +12,7 @@ var app = (function () {
         }
 
         $scope.lookForDuplicates = function () {
-            ipcRenderer.send('duplicate-finder', $scope.pathValue);
+            ipcRenderer.send('dupsFinder-find', $scope.pathValue);
             ipcRenderer.on('finder-progress', (event, args) => {
                 if (args.type === 'progress') {
                     markProgress(args.data);
@@ -27,9 +27,15 @@ var app = (function () {
             });
         };
 
+        $scope.cancelProcess = function() {
+            ipcRenderer.send('dupsFinder-cancel');
+        }
+
         function markProgress(progressObj) {
             $scope.progressObj = progressObj;
-            $scope.$apply();
+            if($scope.$$phase) {
+                $scope.$digest();
+            }
         }
 
         function renderResults(results) {

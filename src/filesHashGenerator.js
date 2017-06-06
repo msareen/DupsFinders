@@ -16,12 +16,22 @@ var hashObjects = {
 };
 
 var progress = null;
+var isCanceled = false;
 
 function onProgress(callback) {
     progress = callback;
 }
 
+function cancelProgress() {
+    isCanceled = true;
+    progress({
+        progressPercentage: 0,
+        message: 'cancelling...'
+    });
+}
+
 function generateHash(dirName) {
+    isCanceled = false;
     var defered = q.defer();
     progress({
         progressPercentage: 0,
@@ -49,7 +59,16 @@ function generateHash(dirName) {
                         progressPercentage: 100,
                         message: 'Completed'
                     })
-                    defered.resolve(hashObjects);
+                    if (isCanceled) {
+                        process({
+                            progressPercentage: 0,
+                            message: 'canceled'
+                        });
+                        defered.resolve(null);
+                    }
+                    else {
+                        defered.resolve(hashObjects);
+                    }
                 });
         }
     });
@@ -57,12 +76,12 @@ function generateHash(dirName) {
 }
 
 
-
 function consolidateHash(files) {
     var defered = q.defer();
     var progressCounter = 0;
     var hashMap = {};
     files.forEach((file) => {
+        if(isCanceled) return;
         getHash(file).then((checksum) => {
             progressCounter++;
             var progressPercentage = ((progressCounter / files.length) * 100).toFixed(1);
@@ -107,6 +126,7 @@ function writeOnConsole(message) {
 
 //Async Directory walker
 function dirWalker(dir, callback) {
+    if (isCanceled) return;
     var results = [];
     fs.stat(dir, (err, stats) => {
         if (err) {
@@ -141,6 +161,7 @@ function dirWalker(dir, callback) {
 
 //Generate hash for a file
 function getHash(file) {
+    if (isCanceled) return;
     var defered = q.defer();
     var stream = fs.ReadStream(file);
     var shasum = crypto.createHash('sha1');
@@ -155,4 +176,4 @@ function getHash(file) {
     return defered.promise;
 }
 
-module.exports = { generateHash, onProgress };
+module.exports = { generateHash, onProgress, cancelProgress };

@@ -7,19 +7,20 @@ const path = require('path');
 const url = require('url');
 const _ = require('lodash');
 
-//require('electron-debug')({showDevTools: true});
 
 const {
-    generateHash, onProgress
+    generateHash, onProgress, cancelProgress 
 } = require('./../filesHashGenerator.js');
+
+let mainWindow = null;
 
 function create() {
     app.on('ready', () => {
-        let mainWindow = new BrowserWindow({
+        mainWindow = new BrowserWindow({
             width: 800,
-            height: 800
+            height: 800,
+            title : "DupsFinder"
         });
-        //mainWindow.maximize();
 
         mainWindow.loadURL(url.format({
             pathname: path.join(__dirname, "index.html"),
@@ -34,13 +35,14 @@ function create() {
 }
 
 
-ipcMain.on('duplicate-finder', (event, args) => {
+ipcMain.on('dupsFinder-find', (event, args) => {
     var dir = _.first(args);
 
-    onProgress(function (message) {
+    onProgress(function (progressObj) {
+        mainWindow.setTitle('Dups Finder - ' + progressObj.message);
         event.sender.send('finder-progress', {
             type: 'progress',
-            data: message
+            data: progressObj
         });
     })
 
@@ -57,9 +59,10 @@ ipcMain.on('duplicate-finder', (event, args) => {
                 data: err
             });
         });
+})
 
-    
-
+ipcMain.on('dupsFinder-cancel', (event, args) => {
+    cancelProgress();
 })
 
 exports.create = create;
