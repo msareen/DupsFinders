@@ -29,6 +29,10 @@
         let bowerComponentPath = path.join(__dirname, '/../bower_components/', name);
         let bowerComponentDist = path.join(bowerComponentPath, '/dist');
 
+        if (!fs.existsSync(clientExternalDepPath))  {
+            fs.mkdirSync(clientExternalDepPath); 
+        }
+
         fs.access(clientExternalDepPath, fs.constants.R_OK | fs.constants.W_OK, (err) => {
             if (!err) {
                 let disPath = fs.existsSync(bowerComponentDist) ? bowerComponentDist : bowerComponentPath;

@@ -10,7 +10,7 @@
   "author": "Manasvi Sareen",
   "license": "MIT",
   "config": {
-    "clientExternalScriptsPath": "src/ui/external"
+     "clientExternalScriptsPath": "src/ui/external"
   },
   "dependencies": {
     "angular": "^1.6.4",
@@ -23,6 +23,7 @@
     "q": "^1.5.0"
   },
   "devDependencies": {
+    "colors": "^1.1.2",
     "devtron": "^1.4.0",
     "electron-debug": "^1.1.0",
     "gulp": "^3.9.1"
