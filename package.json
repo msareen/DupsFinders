@@ -4,13 +4,13 @@
   "description": "Find duplicales usind sha1 checksum",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron ./src/main.js",
     "build": "npm install && bower install && gulp build"
   },
   "author": "Manasvi Sareen",
   "license": "MIT",
   "config": {
-    "clientExternalScriptsPath": "/ui/external"
+    "clientExternalScriptsPath": "src/ui/external"
   },
   "dependencies": {
     "angular": "^1.6.4",
