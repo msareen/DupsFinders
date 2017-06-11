@@ -48,9 +48,11 @@ function generateHash(dirName) {
             });
             consolidateHash(results)
                 .then((hashMap) => {
-                    fullHashMap = hashMap;
-                    var dupes = _.filter(hashMap, (item) => {
-                        return item.count > 1
+                    var dupes = _.filter(hashMap, (item, id) => {
+                        if (item.count > 1) {
+                            item.uniqueId = id;
+                            return item;
+                        }
                     });
                     hashObjects.isHashGeneated = true;
                     hashObjects.fullHashMap = hashMap;
@@ -81,7 +83,7 @@ function consolidateHash(files) {
     var progressCounter = 0;
     var hashMap = {};
     files.forEach((file) => {
-        if(isCanceled) return;
+        if (isCanceled) return;
         getHash(file).then((checksum) => {
             progressCounter++;
             var progressPercentage = ((progressCounter / files.length) * 100).toFixed(1);
@@ -94,12 +96,11 @@ function consolidateHash(files) {
             if (!hashMap[checksum]) {
                 hashMap[checksum] = {
                     count: 1,
-                    files: [file]
+                    files: [{ fullFilePath: file, name: path.basename(file) }]
                 };
             } else {
                 hashMap[checksum].count++;
-                hashMap[checksum].files.push(file);
-                hashMap[checksum].files.push(path.basename(file));
+                hashMap[checksum].files.push({ fullFilePath: file, name: path.basename(file) });
             }
 
             if (progressCounter === files.length) {

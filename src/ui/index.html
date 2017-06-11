@@ -22,7 +22,8 @@
                         <button class="btn btn-default" type="button" ng-click="browsePath()">Browse</button>
                     </span>
                     <span class="input-group-btn">
-                        <button class="btn btn-default" ng-click="lookForDuplicates()" type="button">Go!</button>
+                        <button ng-show="!lookingForDuplicates" class="btn btn-default" ng-click="lookForDuplicates()" type="button">Start</button>
+                        <button ng-show="lookingForDuplicates" class="btn btn-default" ng-click="cancelProcess()" type="button">Stop</button>
                     </span>
                 </div>
             </div>
@@ -39,7 +40,6 @@
                         style="width: {{progressObj.progressPercentage}}%;">
                     </div>
                 </div>
-                <div style="margin-left:50%"><a ng-click="cancelProcess()" style="cursor:pointer">cancel</a></div>
             </div>
         </div>
     </div>
@@ -49,9 +49,10 @@
     require('angular');
     require('angular-ui-grid');
     require('jquery');
+    var _ = require('lodash');
     require('./rendererMain');
 
 </script>
 <script src="./rendererMain.js"></script>
-<script src="./gridFormatter.js"></script>
+<script src="./gridFormatterService.js"></script>
 </html>

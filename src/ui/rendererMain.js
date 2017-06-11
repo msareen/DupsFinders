@@ -7,11 +7,19 @@ var app = (function () {
     app.controller('mainController', function ($scope, uiGridGroupingConstants, gridFormatterService) {
         $scope.pathValue = '';
         $scope.progressObj = {};
+        $scope.lookingForDuplicates = false;
+
+        $scope.gridOptions = gridFormatterService.getGridOptions( $scope );
+        //$scope.gridOptions = {};
+
         $scope.browsePath = function () {
             $scope.pathValue = remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] });
         }
 
+        
+
         $scope.lookForDuplicates = function () {
+            $scope.lookingForDuplicates = true;
             ipcRenderer.send('dupsFinder-find', $scope.pathValue);
             ipcRenderer.on('finder-progress', (event, args) => {
                 if (args.type === 'progress') {
@@ -28,6 +36,7 @@ var app = (function () {
         };
 
         $scope.cancelProcess = function() {
+            $scope.lookingForDuplicates = false;
             ipcRenderer.send('dupsFinder-cancel');
         }
 
@@ -39,13 +48,32 @@ var app = (function () {
         }
 
         function renderResults(results) {
-            $scope.gridOptions.data = results.dupsHashMap;
-            $scope.$apply();
+            $scope.lookingForDuplicates = false;
+            $scope.gridOptions.data = flatGridData(results.dupsHashMap);
+            if(!$scope.$$phase) {
+                $scope.$digest();
+            }
+            
         }
 
-        $scope.gridOptions = {
-            data: {}
+        function flatGridData( dupsHashMap ) {
+            var flatArray = [];
+            _.forEach(dupsHashMap, ( element ) => {
+                _.forEach( element.files, (file ) => {
+                    flatArray.push(
+                        {
+                            uniqueId : element.uniqueId,
+                            fileName : file.name,
+                            location : file.fullFilePath,
+                            count : element.count,
+                        }
+                    )
+                })
+            })
+            return flatArray;
         }
+
+        
     });
     return app;
 })();
