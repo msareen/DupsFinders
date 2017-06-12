@@ -1,6 +1,10 @@
 .grid {
   width: 100%;
-  height: 500px;
+  height: 600px;
+}
+
+.ui-grid-menu-button {
+  height: 31px;
 }
 
 .mar-medium-top {

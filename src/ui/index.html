@@ -1,5 +1,5 @@
+<!DOCTYPE html>
 <html>
-
 <head>
     <link rel="stylesheet" href="external/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="external/bootstrap/css/bootstrap-theme.min.css">
@@ -15,25 +15,29 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
-                <div class="input-group">
-                    <input type="text" ng-model="pathValue" class="form-control" placeholder="path...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" ng-click="browsePath()">Browse</button>
+            <div class="col-lg-12">
+                <div class="input-group" >
+                    <span >
+                        <input type="text" ng-model="pathValue" class="form-control" placeholder="path...">
                     </span>
                     <span class="input-group-btn">
-                        <button ng-show="!lookingForDuplicates" class="btn btn-default" ng-click="lookForDuplicates()" type="button">Start</button>
-                        <button ng-show="lookingForDuplicates" class="btn btn-default" ng-click="cancelProcess()" type="button">Stop</button>
+                        <button class="btn btn-default btn-info" type="button" ng-click="browsePath()">Browse</button>
+                    </span>
+                    <span class="input-group-btn" ng-show="!lookingForDuplicates">
+                        <button  class="btn btn-default btn-success" ng-click="lookForDuplicates()" type="button">Start</button>
+                    </span>
+                    <span class="input-group-btn" ng-show="lookingForDuplicates">
+                        <button  class="btn btn-default btn-danger" ng-click="cancelProcess()" type="button">Stop</button>
                     </span>
                 </div>
             </div>
         </div>
         <div class="row mar-medium-top">
             <div class="col-lg-12">
-                <div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-grouping></div>
+                <div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-grouping ui-grid-selection ui-grid-resize-columns></div>
             </div>
         </div>
-        <div class="row mar-medium-top" ng-if="progressObj.progressPercentage > 0">
+        <div class="row mar-medium-top" ng-show="progressObj.progressPercentage > 0">
             <div class="col-lg-12">
                 <div class="progress">
                    <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="progressObj.progressPercentage" aria-valuemin="0" aria-valuemax="100"

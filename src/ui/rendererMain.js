@@ -1,8 +1,10 @@
 var app = (function () {
     'use strict';
 
-    var app = angular.module('dupsFinderUI', ['ui.grid', 'ui.grid.grouping']);
+    var app = angular.module('dupsFinderUI', ['ui.grid', 'ui.grid.grouping','ui.grid.selection','ui.grid.resizeColumns']);
     const { remote, ipcRenderer } = require('electron');
+    const { spawn } = remote.require('child_process');
+    const path = remote.require('path');
 
     app.controller('mainController', function ($scope, uiGridGroupingConstants, gridFormatterService) {
         $scope.pathValue = '';
@@ -10,12 +12,20 @@ var app = (function () {
         $scope.lookingForDuplicates = false;
 
         $scope.gridOptions = gridFormatterService.getGridOptions( $scope );
-        //$scope.gridOptions = {};
+        $scope.gridOptions.data = [];
 
         $scope.browsePath = function () {
             $scope.pathValue = remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] });
         }
 
+        $scope.explore = function ( grid, row ) {
+            var fileDir = path.parse(row.entity.location).dir;
+            spawn('explorer.exe', [fileDir]);
+        }
+
+        $scope.delete = function (  grid, row ) {
+            alert('delete is not implemented yet');
+        }
         
 
         $scope.lookForDuplicates = function () {
@@ -53,8 +63,8 @@ var app = (function () {
             if(!$scope.$$phase) {
                 $scope.$digest();
             }
-            
         }
+
 
         function flatGridData( dupsHashMap ) {
             var flatArray = [];
