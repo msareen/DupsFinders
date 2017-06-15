@@ -47,7 +47,7 @@
         }
 
         function getButtonTemplate() {
-            return '<div class="input-group" style=\"margin:1px\" ng-if="!row.groupHeader">' +
+            return '<div class="input-group ui-grid-action" style=\"margin:1px\" ng-if="!row.groupHeader">' +
                     '<span class="input-group-btn">' +
                         '<button class="btn btn-default btn-info" ng-click="grid.appScope.explore(grid, row)" type="button">Explore</button>' +
                         '<button class="btn btn-default btn-danger" ng-click="grid.appScope.deleteItem(grid, row)" type="button">Delete</button>' +
