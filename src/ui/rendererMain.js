@@ -5,6 +5,7 @@ var app = (function () {
     const { remote, ipcRenderer } = require('electron');
     const { spawn } = remote.require('child_process');
     const path = remote.require('path');
+    const fs = remote.require('fs');
 
     app.controller('mainController', function ($scope, uiGridGroupingConstants, gridFormatterService) {
         $scope.pathValue = '';
@@ -23,8 +24,18 @@ var app = (function () {
             spawn('explorer.exe', [fileDir]);
         }
 
-        $scope.delete = function (  grid, row ) {
-            alert('delete is not implemented yet');
+        $scope.deleteItem = function (  grid, row ) {
+            if(confirm('Do you want to delete ' + row.entity.location)) {
+                try {
+                    fs.unlink(row.entity.location);
+                    var index = $scope.gridOptions.data.indexOf(row.entity);
+                    $scope.gridOptions.data.splice(index, 1);
+                }
+                catch(e) {
+                    alert('unable to delete the file ' + row.entity.location);
+                    console.log(e);
+                }
+            }
         }
         
 
