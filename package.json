@@ -1,29 +1,26 @@
 {
   "name": "dups-finder",
-  "version": "1.0.0",
-  "description": "Find duplicales usind sha1 checksum",
+  "version": "0.0.1",
+  "description": "Find duplicates in a directory using sha1 checksum",
   "main": "main.js",
   "scripts": {
     "start": "electron ./src/main.js",
-    "build": "npm install && bower install && gulp build"
+    "build": "npm install && bower install && gulp build && npm run buildUi",
+    "buildUi": "cd ./src && npm install",
+    "package" : "npm run packageWin64",
+    "packageWin64": "electron-packager ./src --platform=win32 --arch=x64 --out=./releases" 
   },
   "author": "Manasvi Sareen",
   "license": "MIT",
   "config": {
-     "clientExternalScriptsPath": "src/ui/external"
+    "clientExternalScriptsPath": "src/ui/external"
   },
   "dependencies": {
-    "angular": "^1.6.4",
-    "angular-route": "^1.6.4",
-    "angular-ui-grid": "^4.0.4",
-    "electron": "^1.6.7",
-    "jquery": "^3.2.1",
-    "lodash": "^4.17.4",
     "ncp": "^2.0.0",
-    "q": "^1.5.0",
-	"colors": "^1.1.2"
+    "colors": "^1.1.2"
   },
   "devDependencies": {
+    "asar": "^0.13.0",
     "devtron": "^1.4.0",
     "electron-debug": "^1.1.0",
     "gulp": "^3.9.1"

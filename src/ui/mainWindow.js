@@ -9,7 +9,7 @@ const _ = require('lodash');
 
 
 const {
-    generateHash, onProgress, cancelProgress 
+    generateHash, onProgress, cancelProgress
 } = require('./../filesHashGenerator.js');
 
 let mainWindow = null;
@@ -19,7 +19,7 @@ function create() {
         mainWindow = new BrowserWindow({
             width: 800,
             height: 800,
-            title : "DupsFinder"
+            title: "Duplicate File Finder"
         });
 
         mainWindow.loadURL(url.format({
@@ -32,6 +32,8 @@ function create() {
             mainWindow = null;
         });
     });
+
+    app.on('window-all-closed', app.quit);
 }
 
 

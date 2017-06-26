@@ -4,7 +4,7 @@
 
 #Ignore Folders
 /bower_components/
-/node_modules/
+node_modules
 /mongodb/data
 /mongodb/logs
 /src/ui/external/
